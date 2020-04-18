@@ -12,51 +12,17 @@ from collections import Counter
 import cv2
 from datetime import datetime
 
+from data import get_loader_splits
+
 
 torch.manual_seed(42)
 
 
-# Transforms
-def resize(img):
-    return cv2.resize(img.numpy(), dsize=(256, 256), interpolation=cv2.INTER_CUBIC)
-    
-def permute(img):
-    return img.permute(1, 2, 0)
-
-def permute_back(img):
-    return img.permute(2, 0, 1)
-
-transform = transforms.Compose(
-    [
-        transforms.ToTensor()
-    ]
-)
-
-# Built-in dataset (the same as Kaggle)
-dataset = torchvision.datasets.CIFAR10(root='./data', train=True, 
-                                       download=True, transform=transform)
-
-train_size = int(0.8 * len(dataset))  # 40_000
-test_size = len(dataset) - train_size  # 10_000
-trainset, testset = torch.utils.data.random_split(dataset, [train_size, test_size])
-
-# Trainloader
-trainloader = torch.utils.data.DataLoader(trainset, batch_size=40,
-                                          shuffle=True, num_workers=2)
-
-validloader = torch.utils.data.DataLoader(testset, batch_size=40,
-        shuffle=True, num_workers=1)
-classes = ('plane', 'car', 'bird', 'cat',
-           'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
-
-
-def get_trainable(parameters):
-    return (p for p in parameters if p.requires_grad)
+trainloader, validloader = get_loader_splits()
 
 
 net = torchvision.models.resnet18(pretrained=False, progress=True)
 print("Loaded model")
-net.fc = nn.Linear(512, 10) 
 device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
 # Moving network parameters to device
 net.to(device)
