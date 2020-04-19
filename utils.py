@@ -41,5 +41,5 @@ def validate(net, criterion, loader, device):
             x, y = x.to(device), y.to(device)
             y_pred = net(x)
             running_loss += criterion(y_pred, y)
-            n_correct += (torch.argmax(y_pred, axis=1) == y).sum().int().item()
+            n_correct += (torch.argmax(y_pred, 1) == y).sum().int().item()
     return running_loss / len(loader), n_correct / (len(loader)*loader.batch_size)

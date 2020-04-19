@@ -21,7 +21,7 @@ net.to(device)
 writer = SummaryWriter('runs/cifar/resnet')
 # Optimization
 criterion = nn.CrossEntropyLoss()
-optimizer = optim.Adam(get_trainable(net.parameters()), lr=0.001, weight_decay=0.005)
+optimizer = optim.Adam(get_trainable(net.parameters()), lr=0.001, weight_decay=0.01)
 scheduler = optim.lr_scheduler.LambdaLR(optimizer, lr_lambda=lr_schedule)
 
 # Training loop
@@ -42,7 +42,7 @@ for epoch in range(N_EPOCHS):
 
         running_loss += loss.item()
         with torch.no_grad():
-            n_correct += (torch.argmax(y_pred, axis=1) == y).sum().int().item()
+            n_correct += (torch.argmax(y_pred, 1) == y).sum().int().item()
 
         if i % 1000 == 999:  # every 1000 mini-batches...
             step = epoch * len(trainloader) + i
