@@ -3,22 +3,23 @@ import torch.nn as nn
 import torch.optim as optim
 import torchvision
 from torch.utils.tensorboard import SummaryWriter
-from tqdm import tqdm, trange
+from tqdm import tqdm
 from datetime import datetime
 
 from data import get_loader_splits
 from utils import get_trainable, validate, lr_schedule
+from models import LeNet
 
 torch.manual_seed(42)
 
 trainloader, validloader = get_loader_splits(augment=True)
 
-net = torchvision.models.resnet18(pretrained=False, progress=True)
+net = LeNet()
 device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
 # Moving network parameters to device
 net.to(device)
 # Tensorboard
-writer = SummaryWriter('runs/cifar/resnet')
+writer = SummaryWriter('runs/{}'.format(net.name()))
 # Optimization
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(get_trainable(net.parameters()), lr=0.001, weight_decay=0.01)
@@ -61,7 +62,8 @@ for epoch in range(N_EPOCHS):
             running_loss = 0.0
             n_correct = 0
     # Saving model parameters
-    torch.save(net.state_dict(), "states/epoch{}".format(epoch))
+    if epoch % 3 == 0:
+        torch.save(net.state_dict(), "states/epoch{}".format(epoch))
     scheduler.step()
 
 writer.add_graph(net, x)
