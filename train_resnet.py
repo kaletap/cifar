@@ -19,7 +19,7 @@ device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cp
 # Moving network parameters to device
 net.to(device)
 # Tensorboard
-writer = SummaryWriter('runs/{}'.format(net.name()))
+writer = SummaryWriter('runs/{}'.format(net.name))
 # Optimization
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(get_trainable(net.parameters()), lr=0.001, weight_decay=0.01)

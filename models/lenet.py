@@ -10,7 +10,9 @@ class LeNet(nn.Module):
     Note, that the network in 1998 had only one channel (grayscale 32x32 images of digits)
     and generally had some other differences in the architecture as well.
     """
-    def __init(self):
+    def __init__(self):
+        super().__init__()
+        self.name = "LeCun"
         self.conv1 = nn.Conv2d(in_channels=3, out_channels=6, kernel_size=5)
         self.avg_pool1 = nn.AvgPool2d(kernel_size=2, stride=2)
         self.conv2 = nn.Conv2d(in_channels=6, out_channels=16, kernel_size=5)
@@ -18,7 +20,6 @@ class LeNet(nn.Module):
         self.fc1 = nn.Linear(16*5*5, 120)
         self.fc2 = nn.Linear(120, 84)
         self.fc3 = nn.Linear(84, 10)
-        self.name = "LeCun"
 
     def forward(self, x: torch.Tensor):
         x = F.relu(self.conv1(x))

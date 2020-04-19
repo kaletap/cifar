@@ -26,7 +26,7 @@ def get_loader_splits(augment: bool = True):
                 transforms.RandomAffine((-10, 10)),
                 transforms.RandomResizedCrop(32, scale=(0.85, 1.0)),
                 transforms.ToTensor(),
-                transforms.RandomErasing(p=0.2, scale=(0.02, 0.04))
+                # transforms.RandomErasing(p=0.2, scale=(0.02, 0.04))
             ]
         )
     else:
