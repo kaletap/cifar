@@ -36,7 +36,7 @@ net.to(device)
 writer = SummaryWriter('runs/{}'.format(args.name))
 # Optimization
 criterion = nn.CrossEntropyLoss()
-optimizer = optim.Adam(get_trainable(net.parameters()), lr=0.001, weight_decay=0.001)
+optimizer = optim.Adam(get_trainable(net.parameters()), lr=0.001, weight_decay=0.01)
 scheduler = optim.lr_scheduler.LambdaLR(optimizer, lr_lambda=lr_schedule)
 
 # Training loop

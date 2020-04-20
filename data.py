@@ -21,10 +21,10 @@ def get_loader_splits(augment: bool = True):
     if augment:
         train_transform = transforms.Compose(
             [
-                transforms.ColorJitter(brightness=0.3, contrast=0.2, saturation=0.2, hue=0.01),
+                transforms.ColorJitter(brightness=0.4, contrast=0.4, saturation=0.4, hue=0.1),
                 transforms.RandomHorizontalFlip(p=0.5),
                 transforms.RandomAffine((-10, 10)),
-                transforms.RandomResizedCrop(32, scale=(0.85, 1.0)),
+                transforms.RandomResizedCrop(32, scale=(0.65, 1.0)),
                 transforms.ToTensor(),
                 # transforms.RandomErasing(p=0.2, scale=(0.02, 0.04))
             ]
