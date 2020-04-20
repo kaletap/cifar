@@ -10,7 +10,7 @@ import os
 
 from data import get_loader_splits
 from utils import get_trainable, validate, lr_schedule
-from models import LeNet
+from models import LeNet, WideResNet22
 
 torch.manual_seed(42)
 
@@ -28,7 +28,7 @@ if not os.path.exists(states_dir):
 
 trainloader, validloader = get_loader_splits(augment=not args.no_augmentation)
 
-net = LeNet()
+net = WideResNet22()
 device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
 # Moving network parameters to device
 net.to(device)
@@ -36,7 +36,7 @@ net.to(device)
 writer = SummaryWriter('runs/{}'.format(args.name))
 # Optimization
 criterion = nn.CrossEntropyLoss()
-optimizer = optim.Adam(get_trainable(net.parameters()), lr=0.001, weight_decay=0.01)
+optimizer = optim.Adam(get_trainable(net.parameters()), lr=0.001, weight_decay=0.001)
 scheduler = optim.lr_scheduler.LambdaLR(optimizer, lr_lambda=lr_schedule)
 
 # Training loop
