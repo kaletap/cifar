@@ -42,6 +42,7 @@ optimizer = optim.Adam(get_trainable(net.parameters()), lr=0.001, weight_decay=a
 scheduler = optim.lr_scheduler.LambdaLR(optimizer, lr_lambda=lr_schedule)
 
 # Training loop
+best_valid_accuracy = None
 n_epochs = args.epochs
 for epoch in range(n_epochs):
     running_loss = 0.0
@@ -78,14 +79,10 @@ for epoch in range(n_epochs):
             running_loss = 0.0
             n_correct = 0
     # Saving model parameters
-    if epoch % 3 == 0:
-        torch.save(net.state_dict(), "states/{}/epoch{}".format(args.name, epoch))
+    if best_valid_accuracy is not None and valid_accuracy > 1.005*best_valid_accuracy:
+        best_valid_accuracy = valid_accuracy
+        print("Saving network state of epoch {} with valid accuracy {:.2f}".format(epoch, valid_accuracy*100))
+        torch.save(net.state_dict(), "states/{}/state".format(args.name))
     scheduler.step()
 
 writer.add_graph(net, x)
-
-_, acc = validate(net, criterion, validloader, device)
-print("Evaluation accuracy", acc)
-
-_, acc = validate(net, criterion, trainloader, device)
-print("Training accuracy", acc)
