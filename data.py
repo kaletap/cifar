@@ -24,7 +24,7 @@ def get_loader_splits(augment: bool = True, augment_valid: bool = False):
                 # transforms.ColorJitter(brightness=0.4, contrast=0.4, saturation=0.4, hue=0.1),
                 transforms.RandomHorizontalFlip(p=0.5),
                 # transforms.RandomAffine((-10, 10)),
-                transforms.RandomResizedCrop(32, scale=(0.85, 1.0)),
+                transforms.RandomResizedCrop(32, scale=(0.65, 1.0)),
                 transforms.ToTensor(),
                 # transforms.RandomErasing(p=0.2, scale=(0.02, 0.04))
             ]
@@ -42,7 +42,7 @@ def get_loader_splits(augment: bool = True, augment_valid: bool = False):
     dataset = torchvision.datasets.CIFAR10(root='./data', train=True, 
                                         download=True)
 
-    train_size = int(0.8 * len(dataset))
+    train_size = int(0.9 * len(dataset))
     valid_size = len(dataset) - train_size
 
     trainset_raw, validset_raw = torch.utils.data.random_split(dataset, [train_size, valid_size])

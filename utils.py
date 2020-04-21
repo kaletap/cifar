@@ -4,11 +4,11 @@ import matplotlib.pyplot as plt
 
 
 def lr_schedule(epoch: int) -> float:
-    if epoch < 20:
+    if epoch < 5:
         return 0.1
-    elif epoch < 30:
+    elif epoch < 10:
         return 0.05
-    elif epoch < 50:
+    elif epoch < 20:
         return 0.01
     elif epoch < 70:
         return 0.001
@@ -42,4 +42,4 @@ def validate(net, criterion, loader, device):
             y_pred = net(x)
             running_loss += criterion(y_pred, y)
             n_correct += (torch.argmax(y_pred, 1) == y).sum().int().item()
-    return running_loss / len(loader), n_correct / (len(loader)*loader.batch_size)
+    return running_loss / len(loader), 100. * n_correct / (len(loader)*loader.batch_size)
