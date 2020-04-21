@@ -62,25 +62,25 @@ for epoch in range(n_epochs):
         with torch.no_grad():
             n_correct += (torch.argmax(y_pred, 1) == y).sum().int().item()
 
-        if i % 1000 == 999:  # every 1000 mini-batches...
-            step = epoch * len(trainloader) + i
-            valid_loss, valid_accuracy = validate(net, criterion, validloader, device)
-            train_accuracy = n_correct / (1000 * trainloader.batch_size)
+    step = (epoch + 1) * len(trainloader)
+    valid_loss, valid_accuracy = validate(net, criterion, validloader, device)
+    train_accuracy = n_correct / (1000 * trainloader.batch_size)
 
-            # ...log the running loss
-            writer.add_scalar('training loss', running_loss / 1000, step)
-            writer.add_scalar('training accuracy', train_accuracy, step)
-            writer.add_scalar('validation loss', valid_loss, step)
-            writer.add_scalar('validation accuracy', valid_accuracy, step)
+    # ...log the running loss
+    writer.add_scalar('training loss', running_loss / 1000, step)
+    writer.add_scalar('training accuracy', train_accuracy, step)
+    writer.add_scalar('validation loss', valid_loss, step)
+    writer.add_scalar('validation accuracy', valid_accuracy, step)
 
-            print("Training loss: {:.4f}, training accuracy: {:.2f}, validation loss: {:.4f}, validation accuracy: {:.2f}"
-                  .format(running_loss / 1000, 100*train_accuracy, valid_loss, 100*valid_accuracy))
+    print("Training loss: {:.4f}, training accuracy: {:.2f}, validation loss: {:.4f}, validation accuracy: {:.2f}"
+          .format(running_loss / 1000, 100*train_accuracy, valid_loss, 100*valid_accuracy))
 
-            running_loss = 0.0
-            n_correct = 0
+    running_loss = 0.0
+    n_correct = 0
+    # useful when best_valid_accuracy is None at the beginning
+    best_valid_accuracy = best_valid_accuracy or valid_accuracy
     # Saving model parameters
-    if best_valid_accuracy is not None and valid_accuracy > 1.005*best_valid_accuracy:
-        best_valid_accuracy = valid_accuracy
+    if valid_accuracy > 1.005*best_valid_accuracy:
         print("Saving network state of epoch {} with valid accuracy {:.2f}".format(epoch, valid_accuracy*100))
         torch.save(net.state_dict(), "states/{}/state".format(args.name))
     scheduler.step()
