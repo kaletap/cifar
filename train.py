@@ -82,7 +82,7 @@ for epoch in range(n_epochs):
     # Saving model parameters
     if valid_accuracy > best_valid_accuracy:
         best_valid_accuracy = valid_accuracy
-        print("Saving network state of epoch {} with valid accuracy {:.2f}".format(epoch, valid_accuracy*100))
+        print("Saving network state of epoch {} with valid accuracy {:.2f}".format(epoch, valid_accuracy))
         torch.save(net.state_dict(), "states/{}/state".format(args.name))
     scheduler.step()
 
