@@ -4,7 +4,7 @@ import torchvision
 import torchvision.transforms as transforms
 
 
-def get_loader_splits(augment: bool = True, augment_valid: bool = False):
+def get_loader_splits(batch_size: int = 64, augment: bool = True, augment_valid: bool = False):
     stats = ((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
 
     to_tensor_normalize = transforms.Compose(
@@ -34,7 +34,7 @@ def get_loader_splits(augment: bool = True, augment_valid: bool = False):
                                            download=True, transform=valid_transform)
 
     # Trainloader
-    trainloader = torch.utils.data.DataLoader(trainset, batch_size=128,
+    trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size,
                                             shuffle=True, num_workers=2)
 
     validloader = torch.utils.data.DataLoader(testset, batch_size=10, shuffle=True, num_workers=2)
