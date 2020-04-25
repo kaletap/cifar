@@ -10,7 +10,7 @@ import os
 
 from data import get_loader_splits
 from utils import get_trainable, validate, lr_schedule
-from models import LeNet, WideResNet22
+from models import LeNet, WideResNet22, Hindus
 
 torch.manual_seed(42)
 
@@ -30,7 +30,7 @@ if not os.path.exists(states_dir):
 
 trainloader, validloader = get_loader_splits(augment=not args.no_augmentation, augment_valid=args.augment_valid)
 
-net = WideResNet22()
+net = Hindus()
 device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
 # Moving network parameters to device
 net.to(device)
