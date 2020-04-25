@@ -3,17 +3,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def lr_schedule(epoch: int) -> float:
-    if epoch < 5:
-        return 0.1
-    elif epoch < 15:
-        return 0.05
-    elif epoch < 25:
-        return 0.01
-    elif epoch < 70:
-        return 0.001
-    else:
-        return 0.0003
+def lr_schedule(epoch):
+    lrate = 0.001
+    if epoch > 75:
+        lrate = 0.0005
+    elif epoch > 100:
+        lrate = 0.0003
+    return lrate
 
 
 def imshow(tensor, ax=None):
