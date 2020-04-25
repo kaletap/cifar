@@ -21,7 +21,7 @@ parser.add_argument("-n", "--name", type=str, required=True, help="Name of the r
 parser.add_argument("--no_augmentation", action="store_false", help="Whether to use data augmentation.")
 parser.add_argument("--augment_valid", action="store_true", help="Wheter to use data augmentation for validation.")
 parser.add_argument("-e", "--epochs", type=int, default=70, help="Number of epochs.")
-parser.add_argument("-r", "--regularization", type=float, default=0.005, help="Value of L2 regularization parameter.")
+parser.add_argument("-r", "--regularization", type=float, default=0.0002, help="Value of L2 regularization parameter.")
 args = parser.parse_args()
 
 states_dir = "states/{}".format(args.name)
@@ -34,6 +34,7 @@ net = WideResNet22()
 device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
 # Moving network parameters to device
 net.to(device)
+print("Network parameters moved to {}".format(device))
 # Tensorboard
 writer = SummaryWriter('runs/{}'.format(args.name))
 # Optimization
