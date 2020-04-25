@@ -4,7 +4,8 @@ import torchvision
 import torchvision.transforms as transforms
 
 
-def get_loader_splits(batch_size: int = 64, augment: bool = True, augment_valid: bool = False):
+def get_loader_splits(batch_size: int = 64, valid_batch_size: int = 128,
+                      augment: bool = True, augment_valid: bool = False):
     stats = ((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
 
     to_tensor_normalize = transforms.Compose(

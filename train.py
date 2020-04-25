@@ -23,6 +23,7 @@ parser.add_argument("--augment_valid", action="store_true", help="Wheter to use 
 parser.add_argument("-e", "--epochs", type=int, default=70, help="Number of epochs.")
 parser.add_argument("-r", "--regularization", type=float, default=0.0002, help="Value of L2 regularization parameter.")
 parser.add_argument("-bs", "--batch_size", type=int, default=64, help="Size of a batch.")
+parser.add_argument("-vbs", "--valid_batch_size", type=int, default=128, help="Size of a validation batch.")
 
 args = parser.parse_args()
 
@@ -33,6 +34,7 @@ if not os.path.exists(states_dir):
     os.makedirs(states_dir, exist_ok=True)
 
 trainloader, validloader = get_loader_splits(batch_size=args.batch_size,
+                                             valid_batch_size=args.valid_batch_size,
                                              augment=not args.no_augmentation,
                                              augment_valid=args.augment_valid)
 
