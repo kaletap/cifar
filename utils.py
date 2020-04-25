@@ -4,11 +4,11 @@ import matplotlib.pyplot as plt
 
 
 def lr_schedule(epoch: int) -> float:
-    if epoch < 5:
+    if epoch < 10:
         return 0.1
-    elif epoch < 15:
+    elif epoch < 20:
         return 0.05
-    elif epoch < 25:
+    elif epoch < 40:
         return 0.01
     elif epoch < 70:
         return 0.001
