@@ -34,6 +34,7 @@ def get_trainable(parameters):
 
 
 def validate(net, criterion, loader, device):
+    net.eval()
     running_loss = 0.0
     n_correct = 0
     total = 0
@@ -44,4 +45,5 @@ def validate(net, criterion, loader, device):
             running_loss += criterion(y_pred, y)
             n_correct += (torch.argmax(y_pred, 1) == y).sum().int().item()
             total += y_pred.shape[0]
+    net.train()
     return running_loss / len(loader), 100. * n_correct / total
