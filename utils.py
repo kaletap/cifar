@@ -3,13 +3,17 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def lr_schedule(epoch):
-    lrate = 0.001
-    if epoch > 75:
-        lrate = 0.0005
-    elif epoch > 100:
-        lrate = 0.0003
-    return lrate
+def lr_schedule(epoch: int) -> float:
+    if epoch < 5:
+        return 0.1
+    elif epoch < 15:
+        return 0.05
+    elif epoch < 25:
+        return 0.01
+    elif epoch < 70:
+        return 0.001
+    else:
+        return 0.0003
 
 
 def imshow(tensor, ax=None):
@@ -32,10 +36,12 @@ def get_trainable(parameters):
 def validate(net, criterion, loader, device):
     running_loss = 0.0
     n_correct = 0
+    total = 0
     with torch.no_grad():
         for i, (x, y) in enumerate(loader):
             x, y = x.to(device), y.to(device)
             y_pred = net(x)
             running_loss += criterion(y_pred, y)
             n_correct += (torch.argmax(y_pred, 1) == y).sum().int().item()
-    return running_loss / len(loader), 100. * n_correct / (len(loader)*loader.batch_size)
+            total += y_pred.shape[0]
+    return running_loss / len(loader), 100. * n_correct / total
