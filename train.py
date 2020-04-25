@@ -18,13 +18,15 @@ torch.manual_seed(42)
 parser = argparse.ArgumentParser()
 parser.add_argument("-n", "--name", type=str, required=True, help="Name of the run. Used for creating directories "
                                                                   "with tensorboard files and states of the network.")
-parser.add_argument("--no_augmentation", action="store_false", help="Whether to use data augmentation.")
+parser.add_argument("--no_augmentation", action="store_true", help="Whether to use data augmentation.")
 parser.add_argument("--augment_valid", action="store_true", help="Wheter to use data augmentation for validation.")
 parser.add_argument("-e", "--epochs", type=int, default=70, help="Number of epochs.")
 parser.add_argument("-r", "--regularization", type=float, default=0.0002, help="Value of L2 regularization parameter.")
 parser.add_argument("-bs", "--batch_size", type=int, default=64, help="Size of a batch.")
 
 args = parser.parse_args()
+
+print(args)
 
 states_dir = "states/{}".format(args.name)
 if not os.path.exists(states_dir):
@@ -43,8 +45,7 @@ print("Network parameters moved to {}".format(device))
 writer = SummaryWriter('runs/{}'.format(args.name))
 # Optimization
 criterion = nn.CrossEntropyLoss()
-# optimizer = optim.Adam(get_trainable(net.parameters()), lr=0.01, weight_decay=args.regularization)
-optimizer = optim.rmsprop.RMSprop(net.parameters(), lr=0.001, weight_decay=args.regularization)
+optimizer = optim.Adam(get_trainable(net.parameters()), lr=0.01, weight_decay=args.regularization)
 scheduler = optim.lr_scheduler.LambdaLR(optimizer, lr_lambda=lr_schedule)
 
 # Training loop
