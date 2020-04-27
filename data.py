@@ -54,11 +54,12 @@ class CifarKaggleTestset(Dataset):
     def __init__(self, data_root, augment: bool = True):
         self.augment = augment
         self.samples = []
+        self.indexes = []
         for image_name in tqdm(os.listdir(data_root)):
             image_path = os.path.join(data_root, image_name)
-            with open(image_path, 'r') as f:
+            with open(image_path, 'r'):
                 img = Image.open(image_path)
-                self.samples.append((img.convert('RGB'), int(image_name[:-4])))
+                self.samples.append(img.convert('RGB'))
                 img.close()
 
     def __len__(self):
@@ -66,9 +67,9 @@ class CifarKaggleTestset(Dataset):
 
     def __getitem__(self, idx):
         if self.augment:
-            return augment_transform(self.samples[idx])
+            return augment_transform(self.samples[idx]), self.indexes[idx]
         else:
-            return to_tensor_normalize(self.samples[idx])
+            return to_tensor_normalize(self.samples[idx]), self.indexes[idx]
 
 
 def get_kaggle_testloader(data_root: str, augment: bool = True, batch_size: int = 128):

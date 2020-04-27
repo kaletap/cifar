@@ -38,7 +38,6 @@ net.to(device).eval()
 
 # Making predictions
 ensemble_preds = []
-indexes = None
 for _ in trange(args.ensemble):
     indexes = []
     preds = []
@@ -51,6 +50,7 @@ for _ in trange(args.ensemble):
             preds.append(y_pred)
             indexes.append(idx)
     y_pred = torch.cat(preds)
+    indexes = torch.cat(indexes).numpy()
     ensemble_preds.append(y_pred)
 
 mean_pred = torch.mean(torch.stack(ensemble_preds), 0)
