@@ -6,7 +6,6 @@ predictions is taken as a final prediction.
 
 import torch
 import argparse
-import pandas as pd
 import matplotlib.pyplot as plt; plt.style.use("fivethirtyeight")
 from tqdm import trange
 
@@ -57,7 +56,8 @@ mean_pred = torch.mean(torch.stack(ensemble_preds), 0)
 final_prediction = [classes[label.item()] for label in torch.argmax(mean_pred, 1)]
 
 # Generating submission
-submission = pd.DataFrame({"id": indexes, "label": final_prediction})
-submission.sort_values("id")
-print(submission.head())
-submission.to_csv(args.save_path, index=False)
+submission = list(zip(indexes, final_prediction))
+submission.sort(key=lambda t: t[0])
+lines = ["id,label\n"] + [",".join(pair) + '\n' for pair in submission]
+with open(args.save_path) as f:
+    f.writelines(lines)
