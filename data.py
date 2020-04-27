@@ -60,6 +60,7 @@ class CifarKaggleTestset(Dataset):
             with open(image_path, 'r'):
                 img = Image.open(image_path)
                 self.samples.append(img.convert('RGB'))
+                self.indexes.append(int(image_name[:-4]))
                 img.close()
 
     def __len__(self):
