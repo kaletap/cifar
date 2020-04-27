@@ -7,7 +7,7 @@ predictions is taken as a final prediction.
 import torch
 import argparse
 import matplotlib.pyplot as plt; plt.style.use("fivethirtyeight")
-from tqdm import trange
+from tqdm import tqdm, trange
 
 from data import get_kaggle_testloader
 from models import WideResNet22
@@ -26,6 +26,7 @@ print(args)
 classes = ('airplane', 'automobile', 'bird', 'cat',
            'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
 
+print("Reading kaggle data into memory...")
 testloader = get_kaggle_testloader(args.path, augment=args.augment, batch_size=args.batch_size)
 
 device = torch.device("cuda")
@@ -35,6 +36,7 @@ net = WideResNet22()
 net.load_state_dict(torch.load(args.state_path, map_location=device))
 net.to(device).eval()
 
+print("Making predictions...")
 # Making predictions
 ensemble_preds = []
 for _ in trange(args.ensemble):
@@ -43,7 +45,7 @@ for _ in trange(args.ensemble):
     n_correct = 0
     total = 0
     with torch.no_grad():
-        for i, (x, idx) in enumerate(testloader):
+        for i, (x, idx) in enumerate(tqdm(testloader, leave=False)):
             x = x.to(device)
             y_pred = net(x)
             preds.append(y_pred)
@@ -56,8 +58,10 @@ mean_pred = torch.mean(torch.stack(ensemble_preds), 0)
 final_prediction = [classes[label.item()] for label in torch.argmax(mean_pred, 1)]
 
 # Generating submission
+print("Generating submission file...")
 submission = list(zip(indexes, final_prediction))
 submission.sort(key=lambda t: t[0])
-lines = ["id,label\n"] + [",".join(pair) + '\n' for pair in submission]
-with open(args.save_path) as f:
+lines = ["id,label\n"] + ["{},{}\n".format(idx, label) for idx, label in submission]
+with open(args.save_path, "w") as f:
     f.writelines(lines)
+print("Done")
