@@ -39,7 +39,7 @@ net.to(device).eval()
 print("Making predictions...")
 # Making predictions
 ensemble_preds = []
-for _ in trange(args.ensemble):
+for e in trange(args.ensemble):
     indexes = []
     preds = []
     n_correct = 0
@@ -54,14 +54,17 @@ for _ in trange(args.ensemble):
     indexes = torch.cat(indexes).numpy()
     ensemble_preds.append(y_pred)
 
-mean_pred = torch.mean(torch.stack(ensemble_preds), 0)
-final_prediction = [classes[label.item()] for label in torch.argmax(mean_pred, 1)]
+    mean_pred = torch.mean(torch.stack(ensemble_preds), 0)
+    final_prediction = [classes[label.item()] for label in torch.argmax(mean_pred, 1)]
 
-# Generating submission
-print("Generating submission file...")
-submission = list(zip(indexes, final_prediction))
-submission.sort(key=lambda t: t[0])
-lines = ["id,label\n"] + ["{},{}\n".format(idx, label) for idx, label in submission]
-with open(args.save_path, "w") as f:
-    f.writelines(lines)
-print("Done")
+    # Generating submission file
+    filename = str(e) + args.save_path
+    print("Generating submission file {} ...".format(filename))
+    submission = list(zip(indexes, final_prediction))
+    submission.sort(key=lambda t: t[0])
+    lines = ["id,label\n"] + ["{},{}\n".format(idx, label) for idx, label in submission]
+    with open(filename, "w") as f:
+        f.writelines(lines)
+    print("Done")
+print("Done generating predictions")
+print("Final prediction is in the file", filename)
