@@ -28,7 +28,7 @@ class BasicBlock(nn.Module):
     def forward(self, x):
         x = F.relu(self.bn(x), inplace=True)
         r = self.shortcut(x)
-        x = self.conv1(x)
+        x = F.relu(self.conv1(x))  # nonlinearity
         x = self.conv2(x) * 0.2
         return x.add_(r)
 

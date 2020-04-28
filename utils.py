@@ -10,7 +10,7 @@ def lr_schedule(epoch: int) -> float:
         return 0.05
     elif epoch < 40:
         return 0.01
-    elif epoch < 70:
+    elif epoch < 60:
         return 0.001
     else:
         return 0.0003

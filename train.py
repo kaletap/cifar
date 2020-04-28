@@ -38,7 +38,7 @@ trainloader, validloader = get_loader_splits(batch_size=args.batch_size,
                                              augment=not args.no_augmentation,
                                              augment_valid=args.augment_valid)
 
-net = Hindus()
+net = WideResNet22()
 device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
 # Moving network parameters to device
 net.to(device)
