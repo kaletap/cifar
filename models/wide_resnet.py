@@ -59,12 +59,12 @@ class WideResNet(nn.Module):
         for i in range(n_groups):
             n_channels.append(n_start * (2 ** i) * k)
             stride = 2 if i > 0 else 1
-            layers += [nn.Dropout2d(p=0.5)]
+            layers += [nn.Dropout2d(p=0.1)]
             layers += make_group(N, n_channels[i],
                                  n_channels[i + 1], stride)
 
         # Pool, flatten & add linear layer for classification
-        layers += [nn.Dropout2d(p=0.5),
+        layers += [nn.Dropout2d(p=0.1),
                    nn.BatchNorm2d(n_channels[3]),
                    nn.ReLU(inplace=True),
                    nn.AdaptiveAvgPool2d(1),
